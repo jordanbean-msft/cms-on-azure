@@ -39,6 +39,13 @@ resource mysqlServer 'Microsoft.DBforMySQL/servers@2017-12-01' = {
     size: mysqlSkuSizeMB
     family: mysqlSkuFamily
   }
+  resource allowAllWindowsAzureIps 'firewallRules@2017-12-01' = {
+    name: 'AllowAllWindowsAzureIps'
+    properties: {
+      startIpAddress: '0.0.0.0'
+      endIpAddress: '0.0.0.0'
+    }
+  }
 }
 
 resource mysql 'Microsoft.DBforMySQL/servers/databases@2017-12-01' = {
@@ -50,5 +57,4 @@ resource mysql 'Microsoft.DBforMySQL/servers/databases@2017-12-01' = {
 }
 
 output mysqlServerName string = mysqlServer.name
-output mysqlDatabaseName string = mysql.name
-output mysqlDatabaseConnectionString string = 'Server=tcp:${reference(mysqlServer.id).fullyQualifiedDomainName};Initial Catalog=${mysql.name};Authentication=Active Directory Managed Identity;'
+output mysqlDatabaseName string = mysqlDatabaseName

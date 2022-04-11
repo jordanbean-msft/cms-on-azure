@@ -36,7 +36,7 @@ resource userAssignedManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIden
 resource appServicePlan 'Microsoft.Web/serverfarms@2020-12-01' = {
   name: appServicePlanName
   location: location
-  kind: 'Linux'
+  kind: 'app,linux,container'
   properties: {
     name: appServicePlanName
     workerSize: wordpressWorkerSize
@@ -54,9 +54,9 @@ resource appService 'Microsoft.Web/sites@2020-12-01' = {
   name: appServiceName
   location: location
   properties: {
-    enabled: true
     serverFarmId: appServicePlan.id
     keyVaultReferenceIdentity: userAssignedManagedIdentity.id
+    clientAffinityEnabled: false
     siteConfig: {
       alwaysOn: true
       linuxFxVersion: wordpressImageTag
