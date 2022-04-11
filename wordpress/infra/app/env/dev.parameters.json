@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "value": "cms"
+    },
+    "region": {
+      "value": "eus"
+    },
+    "environment": {
+      "value": "demo"
+    },
+    "vNetName": {
+      "value": "vNet-cms-eus-demo"
+    },
+    "appSubnetName": {
+      "value": "app"
+    },
+    "mysqlAdministratorLogin": {
+      "value": ""
+    },
+    "mysqlAdministratorLoginPassword": {
+      "value": ""
+    },
+    "mysqlVmName": {
+      "value": "B_Gen5_1"
+    },
+    "mysqlServerEdition": {
+      "value": "Basic"
+    },
+    "mysqlVCores": {
+      "value": 1
+    },
+    "mysqlSkuSizeMB": {
+      "value": "32768"
+    },
+    "mysqlSkuFamily": {
+      "value": "Gen5"
+    },
+    "mysqlBackupRetentionDays": {
+      "value": 7
+    },
+    "mysqlStorageSizeMB": {
+      "value": 32768
+    },
+    "dockerRegistryUrl": {
+      "value": "https://mcr.microsoft.com"
+    },
+    "wordpressTitle": {
+      "value": "WordPress - DEV"
+    },
+    "wordpressSku": {
+      "value": "Basic"
+    },
+    "wordpressWorkerSize": {
+      "value": 3
+    },
+    "wordpressImageTag": {
+      "value": "DOCKER|mcr.microsoft.com/appsvc/wordpress-alpine-php:latest"
+    },
+    "wordpressNumberOfWorkers": {
+      "value": 1
+    },
+    "wordpressWorkerSizeId": {
+      "value": "3"
+    },
+    "wordpressSkuCode": {
+      "value": "B1"
+    },
+    "wordpressAdminEmail": {
+      "value": ""
+    }
+  }
+}

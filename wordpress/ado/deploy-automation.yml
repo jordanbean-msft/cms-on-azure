@@ -1,0 +1,90 @@
+name: Deploy Automation
+
+variables:
+  - template: env/global.parameters.yml
+  - template: env/dev.parameters.yml
+  - template: env/stg.parameters.yml
+  - template: env/prd.parameters.yml
+  - template: variables.yml
+    parameters:
+      adoRepositoryName: ${{ variables.adoRepositoryName }}
+
+trigger:
+  - main
+
+stages:
+  - stage: Deploy_to_Dev 
+    jobs:
+    - deployment: Dev
+      pool:
+        vmImage: windows-latest
+      environment: ${{ variables.devEnvironmentName }}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - template: deploy-infrastructure.yml
+              parameters:
+                azureServiceConnection: ${{ variables.serviceConnectionName }}
+                resourceGroupName: ${{ variables.devResourceGroupName }}
+                environmentName: ${{ variables.devEnvironmentName }}
+                pathToInfrastructureDirectory: ${{ variables.pathToInfrastructureDirectory }}
+                adoAccountName: ${{ variables.adoAccountName }}
+                adoRepositoryName: ${{ variables.adoRepositoryName }}
+                adoPat: $(AdoPat)
+                pathToAdoDirectory: ${{ variables.pathToAdoDirectory }}
+            - template: deploy-runbooks.yml
+              parameters:
+                azureServiceConnection: ${{ variables.serviceConnectionName }}
+                resourceGroupName: ${{ variables.devResourceGroupName }}
+                pathToAdoDirectory: ${{ variables.pathToAdoDirectory }}
+  - stage: Deploy_to_Stg
+    jobs:
+    - deployment: Stg
+      pool:
+        vmImage: windows-latest
+      environment: ${{ variables.stgEnvironmentName }}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - template: deploy-infrastructure.yml
+              parameters:
+                azureServiceConnection: ${{ variables.serviceConnectionName }}
+                resourceGroupName: ${{ variables.stgResourceGroupName }}
+                environmentName: ${{ variables.stgEnvironmentName }}
+                pathToInfrastructureDirectory: ${{ variables.pathToInfrastructureDirectory }}
+                adoAccountName: ${{ variables.adoAccountName }}
+                adoRepositoryName: ${{ variables.adoRepositoryName }}
+                adoPat: $(AdoPat)
+                pathToAdoDirectory: ${{ variables.pathToAdoDirectory }}
+            - template: deploy-runbooks.yml
+              parameters:
+                azureServiceConnection: ${{ variables.serviceConnectionName }}
+                resourceGroupName: ${{ variables.stgResourceGroupName }}
+                pathToAdoDirectory: ${{ variables.pathToAdoDirectory }}
+  - stage: Deploy_to_Prd 
+    jobs:
+    - deployment: Prd
+      pool:
+        vmImage: windows-latest
+      environment: ${{ variables.prdEnvironmentName }}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - template: deploy-infrastructure.yml
+              parameters:
+                azureServiceConnection: ${{ variables.serviceConnectionName }}
+                resourceGroupName: ${{ variables.prdResourceGroupName }}
+                environmentName: ${{ variables.prdEnvironmentName }}
+                pathToInfrastructureDirectory: ${{ variables.pathToInfrastructureDirectory }}
+                adoAccountName: ${{ variables.adoAccountName }}
+                adoRepositoryName: ${{ variables.adoRepositoryName }}
+                adoPat: $(AdoPat)
+                pathToAdoDirectory: ${{ variables.pathToAdoDirectory }}
+            - template: deploy-runbooks.yml
+              parameters:
+                azureServiceConnection: ${{ variables.serviceConnectionName }}
+                resourceGroupName: ${{ variables.prdResourceGroupName }}
+                pathToAdoDirectory: ${{ variables.pathToAdoDirectory }}
