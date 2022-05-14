@@ -30,8 +30,20 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
       name: 'standard'
     }
     tenantId: subscription().tenantId
-    enableRbacAuthorization: true
+    enableRbacAuthorization: false
     enabledForTemplateDeployment: true
+    accessPolicies: [
+      {
+        objectId: userAssignedManagedIdentity.properties.principalId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'get'
+            'list'
+          ]
+        }
+      }
+    ]
   }
   resource mysqlAdministratorLoginSecret 'secrets@2021-10-01' = {
     name: mysqlAdministratorLoginSecretName
@@ -62,18 +74,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
     properties: {
       value: wordpressAdminPassword
     }
-  }
-}
-
-var keyVaultSecretsUserRoleDefinitionId = '4633458b-17de-408a-b874-0445c86b69e6'
-
-resource keyVaultRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(keyVaultSecretsUserRoleDefinitionId, userAssignedManagedIdentity.id, keyVault.id)
-  scope: keyVault
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', keyVaultSecretsUserRoleDefinitionId)
-    principalId: userAssignedManagedIdentity.properties.principalId
-    principalType: 'ServicePrincipal'
   }
 }
 

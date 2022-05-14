@@ -33,7 +33,7 @@ resource userAssignedManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIden
   name: userAssignedManagedIdentityName
 }
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2020-12-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2018-11-01' = {
   name: appServicePlanName
   location: location
   kind: 'app,linux,container'
@@ -50,7 +50,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-12-01' = {
   }
 }
 
-resource appService 'Microsoft.Web/sites@2020-12-01' = {
+resource appService 'Microsoft.Web/sites@2021-03-01' = {
   name: appServiceName
   location: location
   properties: {
@@ -121,6 +121,14 @@ resource appService 'Microsoft.Web/sites@2020-12-01' = {
           name: 'WEBSITES_CONTAINER_START_TIME_LIMIT'
           value: '900'
         }
+        {
+          name: 'CDN_ENABLED'
+          value: 'true'
+        }
+        {
+          name: 'CDN_ENDPOINT'
+          value: 'https://${appServiceName}.azureedge.net'
+        }
       ]
       connectionStrings: []
     }
@@ -172,3 +180,5 @@ resource appDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01
     ]
   }
 }
+
+output appServiceName string = appService.name

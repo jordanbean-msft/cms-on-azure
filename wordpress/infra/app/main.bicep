@@ -120,3 +120,12 @@ module appServiceDeployment 'app-service.bicep' = {
     appServicePlanName: names.outputs.appServicePlanName
   }
 }
+
+module cdnDeployment 'cdn.bicep' = {
+  name: 'cdn-deployment'
+  params: {
+    appServiceName: appServiceDeployment.outputs.appServiceName
+    cdnEndpointName: names.outputs.cdnEndpointName
+    cdnProfileName: names.outputs.cdnProfileName
+  }
+}

@@ -9,10 +9,10 @@
       "value": "eus"
     },
     "environment": {
-      "value": "demo"
+      "value": "dev"
     },
     "vNetName": {
-      "value": "vNet-cms-eus-demo"
+      "value": "vNet-cms-eus-dev"
     },
     "appSubnetName": {
       "value": "app"

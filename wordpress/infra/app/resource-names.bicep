@@ -15,3 +15,5 @@ output wordpressAdminPasswordSecretName string = 'wordpress-admin-password-${app
 output mysqlAdministratorLoginSecretName string = 'mysql-administrator-login-${appName}-${region}-${env}'
 output mysqlAdministratorLoginPasswordSecretName string = 'mysql-administrator-login-password-${appName}-${region}-${env}'
 output wordpressAdminEmailSecretName string = 'wordpress-admin-email-${appName}-${region}-${env}'
+output cdnProfileName string = 'cdn-profile-${appName}-${region}-${env}'
+output cdnEndpointName string = 'cdn-endpoint-${appName}-${region}-${env}'
