@@ -24,16 +24,16 @@
       "value": ""
     },
     "mysqlVmName": {
-      "value": "B_Gen5_1"
+      "value": "GP_Gen5_2"
     },
     "mysqlServerEdition": {
-      "value": "Basic"
+      "value": "GeneralPurpose"
     },
     "mysqlVCores": {
-      "value": 1
+      "value": 2
     },
     "mysqlSkuSizeMB": {
-      "value": "32768"
+      "value": "131072"
     },
     "mysqlSkuFamily": {
       "value": "Gen5"
@@ -42,7 +42,7 @@
       "value": 7
     },
     "mysqlStorageSizeMB": {
-      "value": 32768
+      "value": 131072
     },
     "dockerRegistryUrl": {
       "value": "https://mcr.microsoft.com"
@@ -51,7 +51,7 @@
       "value": "WordPress - DEV"
     },
     "wordpressSku": {
-      "value": "Basic"
+      "value": "PremiumV2"
     },
     "wordpressWorkerSize": {
       "value": 3
@@ -66,7 +66,7 @@
       "value": "3"
     },
     "wordpressSkuCode": {
-      "value": "B1"
+      "value": "P1v2"
     },
     "wordpressAdminEmail": {
       "value": ""

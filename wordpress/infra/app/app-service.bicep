@@ -20,6 +20,8 @@ param wordpressSkuCode string
 param wordpressWorkerSize int
 param wordpressWorkerSizeId string
 param wordpressNumberOfWorkers int
+param storageAccountName string
+param storageAccountContainerName string
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsightsName
@@ -48,6 +50,10 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2018-11-01' = {
     name: wordpressSkuCode
     tier: wordpressSku
   }
+}
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+  name: storageAccountName
 }
 
 resource appService 'Microsoft.Web/sites@2021-03-01' = {
@@ -130,6 +136,15 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
           value: 'https://${appServiceName}.azureedge.net'
         }
       ]
+      azureStorageAccounts: {
+        'fileShare': {
+          type: 'AzureFiles'
+          accountName: storageAccount.name
+          shareName: storageAccountContainerName
+          mountPath: '/home/site/wwwroot/wp-content/uploads'
+          accessKey: storageAccount.listKeys().keys[0].value
+        }
+      }
       connectionStrings: []
     }
   }

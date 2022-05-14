@@ -12,6 +12,7 @@ param mysqlSkuSizeMB string
 param mysqlSkuFamily string
 param mysqlBackupRetentionDays int
 param mysqlStorageSizeMB int
+param logAnalyticsWorkspaceName string
 
 resource mysqlServer 'Microsoft.DBforMySQL/servers@2017-12-01' = {
   name: mysqlServerName
@@ -53,6 +54,34 @@ resource mysql 'Microsoft.DBforMySQL/servers/databases@2017-12-01' = {
   properties: {
     charset: 'utf8'
     collation: 'utf8_general_ci'
+  }
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
+  name: logAnalyticsWorkspaceName
+}
+
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'DiagnosticSettings'
+  scope: mysqlServer
+  properties: {
+    workspaceId: logAnalyticsWorkspace.id
+    logs: [
+      {
+        category: 'MySqlSlowLogs'
+        enabled: true
+      }
+      {
+        category: 'MySqlAuditLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
   }
 }
 

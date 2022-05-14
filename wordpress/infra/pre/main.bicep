@@ -13,15 +13,33 @@ module names 'resource-names.bicep' = {
   }
 }
 
-module vNetDeployment 'vnet.bicep' = {
-  name: 'vNet-deployment'
+module loggingDeployment 'logging.bicep' = {
+  name: 'logging-deployment'
   params: {
-    appSubnetName: names.outputs.appSubnetName
-    appSubnetNsgName: names.outputs.appSubnetNsgName
-    bastionSubnetName: names.outputs.bastionSubnetName
-    bastionSubnetNsgName: names.outputs.bastionSubnetNsgName
-    ipAddress: ipAddress
     location: location
-    vNetName: names.outputs.vNetName
+    appInsightsName: names.outputs.appInsightsName
+    logAnalyticsWorkspaceName: names.outputs.logAnalyticsWorkspaceName
+  }
+}
+
+// module vNetDeployment 'vnet.bicep' = {
+//   name: 'vNet-deployment'
+//   params: {
+//     appSubnetName: names.outputs.appSubnetName
+//     appSubnetNsgName: names.outputs.appSubnetNsgName
+//     bastionSubnetName: names.outputs.bastionSubnetName
+//     bastionSubnetNsgName: names.outputs.bastionSubnetNsgName
+//     ipAddress: ipAddress
+//     location: location
+//     vNetName: names.outputs.vNetName
+//   }
+// }
+
+module containerRegistryDeployment 'acr.bicep' = {
+  name: 'container-registry-deployment'
+  params: {
+    containerRegistryName: names.outputs.containerRegistryName
+    location: location
+    logAnalyticsWorkspaceName: names.outputs.logAnalyticsWorkspaceName
   }
 }

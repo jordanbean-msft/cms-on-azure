@@ -1,6 +1,7 @@
 param cdnProfileName string
 param cdnEndpointName string
 param appServiceName string
+param logAnalyticsWorkspaceName string
 
 resource cdnProfile 'Microsoft.Cdn/profiles@2020-04-15' = {
   name: cdnProfileName
@@ -77,6 +78,44 @@ resource cdnEndpoint 'Microsoft.Cdn/profiles/endpoints@2020-04-15' = {
       'text/x-script'
       'text/x-component'
       'text/x-java-source'
+    ]
+  }
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
+  name: logAnalyticsWorkspaceName
+}
+
+resource cdnProfileDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'DiagnosticSettings'
+  scope: cdnProfile
+  properties: {
+    workspaceId: logAnalyticsWorkspace.id
+    logs: [
+      {
+        category: 'AzureCdnAccessLog'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+  }
+}
+
+resource cdnEndpointDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'DiagnosticSettings'
+  scope: cdnEndpoint
+  properties: {
+    workspaceId: logAnalyticsWorkspace.id
+    logs: [
+      {
+        category: 'CoreAnalytics'
+        enabled: true
+      }
     ]
   }
 }

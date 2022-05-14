@@ -7,3 +7,6 @@ output appSubnetName string = 'app'
 output bastionSubnetName string = 'AzureBastionSubnet'
 output appSubnetNsgName string = 'nsg-app-${appName}-${region}-${env}'
 output bastionSubnetNsgName string = 'nsg-bastion-${appName}-${region}-${env}'
+output containerRegistryName string = toLower('cr${appName}${region}${env}')
+output appInsightsName string = 'ai-${appName}-${region}-${env}'
+output logAnalyticsWorkspaceName string = 'la-${appName}-${region}-${env}'

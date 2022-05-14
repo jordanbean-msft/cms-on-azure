@@ -4,8 +4,6 @@ param env string
 
 output managedIdentityName string = 'mi-${appName}-${region}-${env}'
 output appServiceName string = 'wa-wordpress-${appName}-${region}-${env}'
-output appInsightsName string = 'ai-${appName}-${region}-${env}'
-output logAnalyticsWorkspaceName string = 'la-${appName}-${region}-${env}'
 output keyVaultName string = 'kv-${appName}-${region}-${env}'
 output appServicePlanName string = 'asp-${appName}-${region}-${env}'
 output mysqlDatabaseName string = 'mysqldb-${appName}-${region}-${env}'
@@ -17,3 +15,5 @@ output mysqlAdministratorLoginPasswordSecretName string = 'mysql-administrator-l
 output wordpressAdminEmailSecretName string = 'wordpress-admin-email-${appName}-${region}-${env}'
 output cdnProfileName string = 'cdn-profile-${appName}-${region}-${env}'
 output cdnEndpointName string = 'cdn-endpoint-${appName}-${region}-${env}'
+output storageAccountName string = 'sa${appName}${region}${env}'
+output storageAccountContainerName string = 'uploads'

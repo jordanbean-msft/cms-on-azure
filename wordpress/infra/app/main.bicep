@@ -4,6 +4,8 @@ param environment string
 param location string = resourceGroup().location
 param vNetName string
 param appSubnetName string
+param logAnalyticsWorkspaceName string
+param appInsightsName string
 param dockerRegistryUrl string
 param wordpressTitle string
 param wordpressImageTag string
@@ -47,15 +49,6 @@ module managedIdentityDeployment 'managed-identity.bicep' = {
   }
 }
 
-module loggingDeployment 'logging.bicep' = {
-  name: 'logging-deployment'
-  params: {
-    location: location
-    appInsightsName: names.outputs.appInsightsName
-    logAnalyticsWorkspaceName: names.outputs.logAnalyticsWorkspaceName
-  }
-}
-
 module keyVaultDeployment 'key-vault.bicep' = {
   name: 'key-vault-deployment'
   params: {
@@ -72,6 +65,7 @@ module keyVaultDeployment 'key-vault.bicep' = {
     wordpressAdminUsername: wordpressAdminUsername
     wordpressAdminPasswordSecretName: names.outputs.wordpressAdminPasswordSecretName
     wordpressAdminPassword: wordpressAdminPassword
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
   }
 }
 
@@ -90,6 +84,17 @@ module mysqlDeployment 'mysql.bicep' = {
     mysqlAdministratorLoginPassword: mysqlAdministratorLoginPassword
     mysqlVmName: mysqlVmName
     mysqlStorageSizeMB: mysqlStorageSizeMB
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+  }
+}
+
+module storageDeployment 'storage.bicep' = {
+  name: 'storage-deployment'
+  params: {
+    location: location
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    storageAccountContainerName: names.outputs.storageAccountContainerName
+    storageAccountName: names.outputs.storageAccountName
   }
 }
 
@@ -106,7 +111,7 @@ module appServiceDeployment 'app-service.bicep' = {
     mysqlUserNameSecretName: names.outputs.mysqlAdministratorLoginSecretName
     wordpressImageTag: wordpressImageTag
     wordpressNumberOfWorkers: wordpressNumberOfWorkers
-    appInsightsName: loggingDeployment.outputs.appInsightsName
+    appInsightsName: appInsightsName
     mysqlServerName: mysqlDeployment.outputs.mysqlServerName
     wordpressWorkerSizeId: wordpressWorkerSizeId
     userAssignedManagedIdentityName: managedIdentityDeployment.outputs.managedIdentityName
@@ -114,10 +119,12 @@ module appServiceDeployment 'app-service.bicep' = {
     appServiceName: names.outputs.appServiceName
     keyVaultName: keyVaultDeployment.outputs.keyVaultName
     mysqlDatabaseName: mysqlDeployment.outputs.mysqlDatabaseName
-    logAnalyticsWorkspaceName: loggingDeployment.outputs.logAnalyticsWorkspaceName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
     wordpressAdminEmail: wordpressAdminEmail
     mysqlPasswordSecretName: names.outputs.mysqlAdministratorLoginPasswordSecretName
     appServicePlanName: names.outputs.appServicePlanName
+    storageAccountContainerName: storageDeployment.outputs.storageAccountContainerName
+    storageAccountName: storageDeployment.outputs.storageAccountName
   }
 }
 
@@ -127,5 +134,6 @@ module cdnDeployment 'cdn.bicep' = {
     appServiceName: appServiceDeployment.outputs.appServiceName
     cdnEndpointName: names.outputs.cdnEndpointName
     cdnProfileName: names.outputs.cdnProfileName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
   }
 }
