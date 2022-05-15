@@ -20,8 +20,8 @@ param wordpressSkuCode string
 param wordpressWorkerSize int
 param wordpressWorkerSizeId string
 param wordpressNumberOfWorkers int
-param storageAccountName string
-param storageAccountContainerName string
+//param storageAccountName string
+//param storageAccountContainerName string
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsightsName
@@ -52,9 +52,9 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2018-11-01' = {
   }
 }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: storageAccountName
-}
+// resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
+//   name: storageAccountName
+// }
 
 resource appService 'Microsoft.Web/sites@2021-03-01' = {
   name: appServiceName
@@ -135,18 +135,27 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
           name: 'CDN_ENDPOINT'
           value: 'https://${appServiceName}.azureedge.net'
         }
-      ]
-      azureStorageAccounts: {
-        'fileShare': {
-          type: 'AzureFiles'
-          accountName: storageAccount.name
-          shareName: storageAccountContainerName
-          mountPath: '/home/site/wwwroot/wp-content/uploads'
-          accessKey: storageAccount.listKeys().keys[0].value
+        {
+          name: 'GIT_REPO'
+          value: 'https://github.com/jordanbean-msft/wordpress-azure'
         }
-      }
+        {
+          name: 'GIT_BRANCH'
+          value: 'linux-appservice-1'
+        }
+      ]
+      // azureStorageAccounts: {
+      //   'fileShare': {
+      //     type: 'AzureFiles'
+      //     accountName: storageAccount.name
+      //     shareName: storageAccountContainerName
+      //     mountPath: '/home/site/wwwroot/wp-content/uploads'
+      //     accessKey: storageAccount.listKeys().keys[0].value
+      //   }
+      // }
       connectionStrings: []
     }
+    httpsOnly: true
   }
   identity: {
     type: 'UserAssigned'
@@ -155,6 +164,28 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
     }
   }
 }
+
+// resource deploymentSlot 'Microsoft.Web/sites/slots@2021-03-01' = {
+//   name: '${appService.name}/staging'
+//   location: location
+//   properties: {
+//     serverFarmId: appServicePlan.id
+//     keyVaultReferenceIdentity: userAssignedManagedIdentity.id
+//     cloningInfo: {
+//       sourceWebAppId: appService.id
+//       appSettingsOverrides: {
+//         'GIT_REPO': 'https://github.com/jordanbean-msft/wordpress-azure'
+//         'GIT_BRANCH': 'linux-appservice-2'
+//       }
+//     }
+//   }
+//   identity: {
+//     type: 'UserAssigned'
+//     userAssignedIdentities: {
+//       '${userAssignedManagedIdentity.id}': {}
+//     }
+//   }
+// }
 
 resource appDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'DiagnosticSettings'

@@ -88,15 +88,15 @@ module mysqlDeployment 'mysql.bicep' = {
   }
 }
 
-module storageDeployment 'storage.bicep' = {
-  name: 'storage-deployment'
-  params: {
-    location: location
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    storageAccountContainerName: names.outputs.storageAccountContainerName
-    storageAccountName: names.outputs.storageAccountName
-  }
-}
+// module storageDeployment 'storage.bicep' = {
+//   name: 'storage-deployment'
+//   params: {
+//     location: location
+//     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+//     storageAccountContainerName: names.outputs.storageAccountContainerName
+//     storageAccountName: names.outputs.storageAccountName
+//   }
+// }
 
 module appServiceDeployment 'app-service.bicep' = {
   name: 'app-service-deployment'
@@ -123,8 +123,8 @@ module appServiceDeployment 'app-service.bicep' = {
     wordpressAdminEmail: wordpressAdminEmail
     mysqlPasswordSecretName: names.outputs.mysqlAdministratorLoginPasswordSecretName
     appServicePlanName: names.outputs.appServicePlanName
-    storageAccountContainerName: storageDeployment.outputs.storageAccountContainerName
-    storageAccountName: storageDeployment.outputs.storageAccountName
+    //storageAccountContainerName: storageDeployment.outputs.storageAccountContainerName
+    //storageAccountName: storageDeployment.outputs.storageAccountName
   }
 }
 
